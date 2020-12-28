@@ -25,9 +25,10 @@ export class TableComponent implements OnInit, OnDestroy {
   rows = 5;
   showWrongNameMessage = '';
   showWrongSpriceMessage = '';
-  productRowIndex: number;
-  productRowPriceIndex: number;
+  productRowIndex: number = null;
+  productRowPriceIndex: number = null;
   productOriginalData: any;
+  values = '';
 
   constructor(
     private productService: ProductService,
@@ -41,12 +42,27 @@ export class TableComponent implements OnInit, OnDestroy {
     this.productOriginalData.unsubscribe();
   }
 
+  resetMappingCredentials(): void {
+    this.productRowIndex = null;
+    this.productRowPriceIndex = null;
+    this.showWrongNameMessage = '';
+    this.showWrongSpriceMessage = '';
+  }
+
+  getIndex(arr: any, product: Product) {
+    let index = arr.map((item: any) => item.id).indexOf(product['id']);
+    return index;
+  }
+
   updateProductValue(product: Product, index: any, newValue: string, key: string): void {
     //in a real application, make a request to a remote url with the query and return updated product list
-    this.products[index][key] = newValue;
-    this.allProductList[index][key] = newValue;
+    let productIndex = this.getIndex(this.products, product);
+    let productOriginnalIndex = this.getIndex(this.allProductList, product);
+    this.products[productIndex][key] = newValue;
+    this.allProductList[productOriginnalIndex][key] = newValue;
     this.productService.changeProductSource(this.products);
     this.productService.changeProductOriginalSource(this.allProductList);
+    this.resetMappingCredentials();
   }
 
   changeProductName(product: Product, event: any, index: any): void {
@@ -122,7 +138,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   removeProduct(product: Product): void {
     //in a real application, make a request to a remote url with the query and return updated product list
-    let removeIndex = this.allProductList.map((item) => item.id).indexOf(product['id']);
+    let removeIndex = this.getIndex(this.allProductList, product);
     this.allProductList.splice(removeIndex, 1);
     this.productService.changeProductSource(this.allProductList);
     this.productService.changeProductOriginalSource(this.allProductList);

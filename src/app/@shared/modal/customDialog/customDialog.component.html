@@ -1,6 +1,5 @@
-<app-add-product
-  *ngIf="modalType === 'add-product'"
-  [title_tag]="title"
-  [formType]="formType"
-  [form_data]="formData"
-></app-add-product>
+<div [ngSwitch]="modalType">
+  <div *ngSwitchCase="'add-product'">
+    <app-add-product [title_tag]="title" [formType]="formType" [form_data]="formData"></app-add-product>
+  </div>
+</div>
