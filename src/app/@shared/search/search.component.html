@@ -1,0 +1,11 @@
+<p-autoComplete
+  [(ngModel)]="selectedProduct"
+  [suggestions]="filteredProductList"
+  (completeMethod)="filterProduct($event)"
+  placeholder="Search by product name (Min. 2 characters)"
+  (onSelect)="onSelectProductFunc($event)"
+  (onClear)="onUnSelectProductFunc()"
+  field="name"
+  [minLength]="2"
+>
+</p-autoComplete>

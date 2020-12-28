@@ -1,0 +1,98 @@
+<p-toast></p-toast>
+<app-spinner></app-spinner>
+<div class="card" *ngIf="products.length > 0; else no_product_found">
+  <p-table
+    [value]="products"
+    dataKey="id"
+    *ngIf="products"
+    styleClass="p-datatable-responsive-demo"
+    [paginator]="true"
+    [rows]="5"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[5, 10, 50]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Code</th>
+        <th pSortableColumn="name"><p-sortIcon field="name"></p-sortIcon>Name</th>
+        <th pSortableColumn="inventoryStatus"><p-sortIcon field="inventoryStatus"></p-sortIcon>Category</th>
+        <th pSortableColumn="quantity"><p-sortIcon field="quantity"></p-sortIcon>Quantity</th>
+        <th pSortableColumn="price"><p-sortIcon field="price"></p-sortIcon>Cost price</th>
+        <th>Selling price</th>
+        <th>Delete</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+      <tr>
+        <td>
+          {{ product.code }}
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor class="d-flex-col">
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="text"
+                [ngModel]="product.name"
+                (ngModelChange)="changeProductName(product, $event, rowIndex)"
+                required
+              />
+              <span *ngIf="showWrongNameMessage && productRowIndex === rowIndex" class="text-danger">
+                {{ showWrongNameMessage }}
+              </span>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ product.name }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          {{ product.inventoryStatus }}
+        </td>
+        <td>
+          {{ product.quantity }}
+        </td>
+        <td>
+          {{ product.price | currency: 'USD' }}
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor class="d-flex-col">
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                type="text"
+                [ngModel]="product.sprice"
+                (ngModelChange)="changeProductSprice(product, $event, rowIndex)"
+                required
+              />
+              <span *ngIf="showWrongSpriceMessage && productRowPriceIndex === rowIndex" class="text-danger">
+                {{ showWrongSpriceMessage }}
+              </span>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ product.sprice | currency: 'USD' }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-trash"
+            (click)="deleteProduct(product)"
+            class="p-button-rounded p-button-text"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<ng-template #no_product_found>
+  <div class="noProductFound d-flex-col d-flex-centre">
+    <span> No product found with the given name. </span>
+    <img src="../../../assets/images/noProduct/no-product-found.svg" />
+  </div>
+</ng-template>

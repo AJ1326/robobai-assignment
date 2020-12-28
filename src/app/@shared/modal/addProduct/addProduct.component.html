@@ -1,0 +1,154 @@
+<app-spinner></app-spinner>
+<div>
+  <div class="modal-header rb-modal-header">
+    <h4 class="modal-title font-weight-bold text-black-1">{{ title_tag }}</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="productForm" novalidate>
+      <div class="row mt-3">
+        <div class="col-4">
+          <label for="first_name" class="text-black-1">Product Name</label>
+        </div>
+        <div class="input-group col-8">
+          <input
+            id="name"
+            class="form-control rb-input"
+            placeholder="Please enter product name."
+            formControlName="name"
+            name="v"
+            type="text"
+          />
+          <div class="col-12 error-mssg" *ngIf="(f.name.touched || submitted) && f.name.errors">
+            <label for="name" class="text-danger" *ngIf="f.name.errors.required">*Product name is required.</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-4">
+          <label for="description" class="text-black-1">Description</label>
+        </div>
+        <div class="input-group col-8">
+          <textarea
+            id="description"
+            class="form-control rb-input"
+            placeholder="Add product detail"
+            formControlName="description"
+            name="description"
+            type="text"
+          >
+          </textarea>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-4">
+          <label for="first_name" class="text-black-1">Category</label>
+        </div>
+        <div class="input-group col-8">
+          <input
+            id="category"
+            class="form-control rb-input"
+            placeholder="What's the category of the product."
+            formControlName="category"
+            name="category"
+            type="text"
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-4">
+          <label for="quantity" class="text-black-1" translate>Quantity</label>
+        </div>
+
+        <div class="input-group col-8">
+          <input
+            id="quantity"
+            formControlName="quantity"
+            class="form-control rb-input"
+            placeholder="Enter the quantity of the product."
+            name="quantity"
+            type="text"
+          />
+          <div class="col-12 error-mssg" *ngIf="(f.quantity.touched || submitted) && f.quantity.errors">
+            <label for="quantity" class="text-danger" *ngIf="f.quantity.errors.numberRequired" translate
+              >*Please enter quantity in numbers.</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-4">
+          <label for="inventoryStatus" class="text-black-1" translate>Inventory Status</label>
+        </div>
+        <div class="input-group col-8" *ngIf="dropdownList !== null">
+          <ng-multiselect-dropdown
+            class="multi-select-dropdown"
+            [settings]="dropdownSettings"
+            [placeholder]="'Select inventory status'"
+            [data]="dropdownList"
+            [(ngModel)]="selectedItems"
+            (onSelect)="onItemSelect($event)"
+            (onDeSelect)="onItemDeSelect($event)"
+            [ngModelOptions]="{ standalone: true }"
+          >
+          </ng-multiselect-dropdown>
+          <div class="col-12 error-mssg" *ngIf="isInventorySelected">
+            <label for="inventoryStatus" class="text-danger" translate>*Please select inventory status.</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-4">
+          <label for="price" class="text-black-1" translate>Cost Price</label>
+        </div>
+        <div class="input-group col-8">
+          <input
+            id="price"
+            formControlName="price"
+            class="form-control rb-input"
+            placeholder="Enter the cost price of the product."
+            name="price"
+            type="text"
+          />
+          <div class="col-12 error-mssg" *ngIf="(f.price.touched || submitted) && f.price.errors">
+            <label for="price" class="text-danger" *ngIf="f.price.errors.numberRequired" translate
+              >*Please enter price in numbers.</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3" *ngIf="f.price.valid">
+        <div class="col-4">
+          <label for="sprice" class="text-black-1" translate>Selling Price</label>
+        </div>
+
+        <div class="input-group col-8">
+          <input
+            id="sprice"
+            formControlName="sprice"
+            class="form-control rb-input"
+            placeholder="Enter the selling price of the product."
+            name="sprice"
+            type="text"
+          />
+          <div class="col-12 error-mssg" *ngIf="(f.sprice.touched || submitted) && f.sprice.errors">
+            <label for="sprice" class="text-danger" *ngIf="f.sprice.errors.numberRequired" translate
+              >*Please enter selling price in numbers.</label
+            >
+          </div>
+          <div class="col-12 error-mssg" *ngIf="(f.sprice.touched || submitted) && f.sprice.errors">
+            <label for="sprice" class="text-danger" *ngIf="f.sprice.errors.priceComparison" translate
+              >*Selling price must be greater than cost price.</label
+            >
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer border-0 rb-modal-footer">
+    <button class="btn-cancel ml-4 w-100" (click)="activeModal.close(false)" ngbAutoFocus>Cancel</button>
+    <button class="btn-save ml-4 w-100" *ngIf="!isLoading" (click)="save()">Submit</button>
+    <button class="btn-save ml-4 w-100" disabled *ngIf="isLoading">
+      <i class="fa fa-spinner fa-spin" style="font-size: 16px"></i>
+    </button>
+  </div>
+</div>
